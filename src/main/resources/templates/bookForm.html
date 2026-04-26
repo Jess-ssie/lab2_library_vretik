@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${book.id == null ? 'Додати книгу' : 'Редагувати книгу'}"></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body class="bg-light">
+<div class="container mt-5 col-md-6">
+  <div class="card shadow">
+    <div class="card-header text-white"
+         th:classappend="${book.id == null ? 'bg-primary' : 'bg-warning text-dark'}">
+      <h3 class="mb-0" th:text="${book.id == null ? 'Нова книга' : 'Редагування книги'}"></h3>
+    </div>
+
+    <div class="card-body">
+      <div th:if="${errorMessage}" class="alert alert-danger shadow-sm" role="alert">
+        <span th:text="${errorMessage}"></span>
+      </div>
+
+      <form th:action="@{/save}" th:object="${book}" method="post">
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="mb-3">
+          <label class="form-label">Назва книги</label>
+          <input type="text" th:field="*{title}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Автор</label>
+          <select th:field="*{author}" class="form-select" required>
+            <option value="">Обрати автора...</option>
+            <option th:each="auth : ${authors}"
+                    th:value="${auth.id}"
+                    th:text="${auth.name}">Ім'я автора</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">ISBN</label>
+          <input type="text" th:field="*{isbn}" class="form-control" placeholder="568-...">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Вікова категорія</label>
+          <select th:field="*{ageCategory}" class="form-select">
+            <option value="0+">0+</option>
+            <option value="6+">6+</option>
+            <option value="12+">12+</option>
+            <option value="16+">16+</option>
+            <option value="18+">18+</option>
+          </select>
+        </div>
+
+        <div class="mt-4 text-center">
+          <button type="submit"
+                  th:classappend="${book.id == null ? 'btn-primary' : 'btn-warning'}"
+                  class="btn px-4 me-2"
+                  th:text="${book.id == null ? 'Зберегти' : 'Оновити дані'}"></button>
+
+          <a th:href="@{/books}" class="btn btn-outline-secondary px-4">Скасувати</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
